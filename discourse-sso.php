@@ -140,6 +140,12 @@ class DiscourseSSOClient
 		header('Location: '.SSO_URL_LOGGED);
 	}
 
+	public function removeNonce($nonce)
+	{
+		$nonce = $this->mysqli->escape_string($nonce);
+		$this->mysqli->query('DELETE FROM '.SSO_DB_TABLE.' WHERE nonce = "'.$nonce.'"');
+	}
+
 	private function removeExpiredNonces()
 	{
 		$this->mysqli->query('DELETE FROM '.SSO_DB_TABLE.' WHERE expire < UNIX_TIMESTAMP()');
