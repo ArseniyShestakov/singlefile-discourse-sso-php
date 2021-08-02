@@ -154,7 +154,7 @@ class DiscourseSSOClient
 	private function addNonce($nonce, $expire)
 	{
 		$nonce = $this->mysqli->escape_string($nonce);
-		$this->mysqli->query("INSERT INTO ".SSO_DB_TABLE." (`id`, `nonce`, `logged`, `expire`) VALUES (NULL, '$nonce', '0', '".$expire."');");
+		$this->mysqli->query("INSERT INTO ".SSO_DB_TABLE." (`id`, `nonce`, `logged`, `expire`,`admin`,`moderator`) VALUES (NULL, '$nonce', '0', '".$expire."',0,0);");
 	}
 
 	private function getStatus($nonce)
