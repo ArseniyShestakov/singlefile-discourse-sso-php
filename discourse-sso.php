@@ -39,7 +39,24 @@ if(basename(__FILE__) === basename($_SERVER['SCRIPT_NAME']))
 	$status = $DISCOURSE_SSO->getAuthentication();
 	if(false !== $status && true == $status['logged'])
 	{
-		header('Location: '.URL_LOGGEDREDIRECT);
+                if(isset($_GET['logout']))
+                {
+                         $hashedNonce = hash('sha512', $status["nonce"]);
+
+                        if($hashedNonce === $_GET['logout'])
+                        {
+                        $DISCOURSE_SSO->logoutUser($status["nonce"]);
+                        }
+                        else
+                        {
+                                die("invalid logout request");
+                        }
+                }
+                else
+                {
+                header('Location: '.URL_LOGGEDREDIRECT);
+                }
+
 	}
 	else if(empty($_GET) || !isset($_GET['sso']) || !isset($_GET['sig']))
 	{
@@ -139,6 +156,13 @@ class DiscourseSSOClient
 		header('Access-Control-Allow-Origin: *');
 		header('Location: '.SSO_URL_LOGGED);
 	}
+	
+        public function logoutUser($nonce)
+        {
+                $this->removeNonce($nonce);
+                $this->unSetCookie();
+                header('Location: ' . SSO_URL_LOGGED);
+        }
 
 	public function removeNonce($nonce)
 	{
@@ -208,6 +232,11 @@ class DiscourseSSOClient
 	{
 		setcookie(SSO_COOKIE, $value.','.$this->signCookie($value), $expire, "/", SSO_COOKIE_DOMAIN, SSO_COOKIE_SECURE, SSO_COOKIE_HTTPONLY);
 	}
+	
+        private function unSetCookie()
+        {
+                setcookie(SSO_COOKIE, '', time() - 3600, "/", SSO_COOKIE_DOMAIN, SSO_COOKIE_SECURE, SSO_COOKIE_HTTPONLY);
+        }
 
 	private function getUrl($request)
 	{
