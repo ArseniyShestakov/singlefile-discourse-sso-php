@@ -21,11 +21,12 @@ git clone https://github.com/wikimedia/mediawiki-extensions-Auth_remoteuser.git 
 ## clone this repo and copy `discourse-sso.php` to mediawiki dir
 
 ```
-mv singlefile-discourse-sso-php/discourse-sso.php /path/to/mediawiki/
+cp singlefile-discourse-sso-php/discourse-sso.php /path/to/mediawiki/
 ```
 
-## add database username, password and schema to top of `discourse-sso.php` file
-
+## add your info to top of `discourse-sso.php` file
+- need to find database username, password and schema (will be in `LocalSettings.php`)
+- need url of your discourse ( https://your_discourse.domain ) and the secret set from discourse admin panel
 ```
 nano /path/to/mediawiki/discourse-sso.php
 ```
